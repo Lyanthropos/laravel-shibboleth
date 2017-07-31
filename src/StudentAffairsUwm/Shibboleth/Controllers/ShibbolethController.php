@@ -87,7 +87,7 @@ class ShibbolethController extends Controller
             $map[$local] = $this->getServerVariable($server);
         }
 
-        if (empty($map['email'])) {
+        if (empty($map['umndid'])) {
             return abort(403, 'Unauthorized');
         }
 
@@ -95,8 +95,8 @@ class ShibbolethController extends Controller
 
         // Attempt to login with the email, if success, update the user model
         // with data from the Shibboleth headers (if present)
-        if (Auth::attempt(array('email' => $map['email']), true)) {
-            $user = $userClass::where('email', '=', $map['email'])->first();
+        if (Auth::attempt(array('umndid' => $map['umndid']), true)) {
+            $user = $userClass::where('umndid', '=', $map['umndid'])->first();
 
             // Update the model as necessary
             $user->update($map);
@@ -114,11 +114,11 @@ class ShibbolethController extends Controller
 
         Session::regenerate();
 
-        $entitlementString = $this->getServerVariable(config('shibboleth.entitlement'));
-        if (!empty($entitlementString)) {
-            $entitlements = Entitlement::findInString($entitlementString);
-            $user->entitlements()->sync($entitlements);
-        }
+        // $entitlementString = $this->getServerVariable(config('shibboleth.entitlement'));
+        // if (!empty($entitlementString)) {
+        //     $entitlements = Entitlement::findInString($entitlementString);
+        //     $user->entitlements()->sync($entitlements);
+        // }
 
         $route = config('shibboleth.authenticated');
 
@@ -169,7 +169,8 @@ class ShibbolethController extends Controller
 
         $referer = $this->getServerVariable('HTTP_REFERER');
 
-        die("Goodbye, fair user. <a href='$referer'>Return from whence you came</a>!");
+        Auth::logout();
+        Session::flush();
     }
 
     /**
@@ -186,7 +187,7 @@ class ShibbolethController extends Controller
             $userAttrs = $this->idp->fetchAttrs($username);
             if ($userAttrs) {
                 $this->idp->markAsAuthenticated($username);
-                $this->idp->redirect();
+                $this->idp->redirect("/shibboleth-authenticate");
             }
 
             $data['error'] = 'Incorrect username and/or password';
