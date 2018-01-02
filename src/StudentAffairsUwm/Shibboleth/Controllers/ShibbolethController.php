@@ -70,7 +70,7 @@ class ShibbolethController extends Controller
 
         return Redirect::to('https://' . Request::server('SERVER_NAME')
             . ':' . Request::server('SERVER_PORT') . config('shibboleth.idp_login')
-            . '?target=' . action('' . __CLASS__ . '@idpAuthenticate'));
+            . '?target=' . action('\\' . __CLASS__ . '@idpAuthenticate'));
     }
 
     /**
