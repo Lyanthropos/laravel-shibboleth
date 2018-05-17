@@ -87,7 +87,7 @@ class ShibbolethController extends Controller
             $map[$local] = $this->getServerVariable($server);
         }
 
-        if (empty($map['umndid'])) {
+        if (empty($map[config('shibboleth.authfield')])) {
             return abort(403, 'Unauthorized');
         }
 
@@ -95,8 +95,8 @@ class ShibbolethController extends Controller
 
         // Attempt to login with the email, if success, update the user model
         // with data from the Shibboleth headers (if present)
-        if (Auth::attempt(array('umndid' => $map['umndid']), true)) {
-            $user = $userClass::where('umndid', '=', $map['umndid'])->first();
+        if (Auth::attempt(array(config('shibboleth.authfield') => $map[config('shibboleth.authfield')]), true)) {
+            $user = $userClass::where(config('shibboleth.authfield'), '=', $map[config('shibboleth.authfield')])->first();
 
             // Update the model as necessary
             $user->update($map);
