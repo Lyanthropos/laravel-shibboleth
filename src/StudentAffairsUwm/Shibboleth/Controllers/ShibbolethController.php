@@ -106,6 +106,7 @@ class ShibbolethController extends Controller
         elseif (config('shibboleth.add_new_users', true)) {
             $map['password'] = 'shibboleth';
             $user = $userClass::create($map);
+            Auth::attempt(array(config('shibboleth.authfield') => $map[config('shibboleth.authfield')]), true);
         }
 
         else {
