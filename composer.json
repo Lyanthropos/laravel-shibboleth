@@ -22,7 +22,6 @@
     "require": {
         "illuminate/support": "5.*",
         "mrclay/shibalike": "1.0.0",
-        "laravel/framework": "*",
         "tymon/jwt-auth": "^0.5.10"
     },
     "autoload": {
