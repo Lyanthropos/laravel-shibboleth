@@ -22,8 +22,8 @@
     "require": {
         "illuminate/support": ">5.0",
         "mrclay/shibalike": "1.0.0",
-        "laravel/framework": ">5.0",
-        "tymon/jwt-auth": ">0.5"
+        "laravel/framework": "6.0.*",
+        "tymon/jwt-auth": "1.0.*"
     },
     "autoload": {
         "psr-4": {
