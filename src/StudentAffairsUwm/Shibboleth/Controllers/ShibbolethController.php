@@ -145,7 +145,7 @@ class ShibbolethController extends Controller
      */
     public function emulateLogin()
     {
-        $from = (Input::get('target') != null) ? Input::get('target') : $this->getServerVariable('HTTP_REFERER');
+        $from = (Request::input('target') != null) ? Request::input('target') : $this->getServerVariable('HTTP_REFERER');
 
         $this->sp->makeAuthRequest($from);
         $this->sp->redirect();
@@ -171,9 +171,9 @@ class ShibbolethController extends Controller
     {
         $data = [];
 
-        if (Input::get('username') != null) {
-            $username = (Input::get('username') === Input::get('password')) ?
-                Input::get('username') : '';
+        if (Request::input('username') != null) {
+            $username = (Request::input('username') === Request::input('password')) ?
+                Request::input('username') : '';
 
             $userAttrs = $this->idp->fetchAttrs($username);
             if ($userAttrs) {
