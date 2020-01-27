@@ -179,12 +179,6 @@ if (Auth::user()->entitlements->contains('name', $entitlement)) {
 }
 ```
 
-## JWTAuth Tokens ##
-
-If you're taking advantage of token authentication with [tymon/jwt-auth][4] then
-set this variable in your `.env`
-
-    JWTAUTH=true
 
 ## Looking for Laravel 5.0 or 4? ##
 

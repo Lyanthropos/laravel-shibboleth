@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Illuminate\Console\AppNamespaceDetectorTrait;
-use JWTAuth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use StudentAffairsUwm\Shibboleth\Entitlement;
 use StudentAffairsUwm\Shibboleth\ConfigurationBackwardsCompatabilityMapper;
@@ -123,10 +122,6 @@ class ShibbolethController extends Controller
 
         $route = config('shibboleth.authenticated');
 
-        if (config('jwtauth') === true) {
-            $route .= $this->tokenizeRedirect($user, ['auth_type' => 'idp']);
-        }
-
         return redirect()->intended($route);
     }
 
@@ -137,11 +132,6 @@ class ShibbolethController extends Controller
     {
         Auth::logout();
         Session::flush();
-
-        if (config('jwtauth')) {
-            $token = JWTAuth::parseToken();
-            $token->invalidate();
-        }
 
         if (config('shibboleth.emulate_idp') == true) {
             return Redirect::to(action('\\' . __CLASS__ . '@emulateLogout'));
@@ -248,20 +238,4 @@ class ShibbolethController extends Controller
         return (View::exists($view)) ? view($view) : Redirect::to($view);
     }
 
-    /**
-     * Uses JWTAuth to tokenize the user and returns a URL query string.
-     *
-     * @param  App\User $user
-     * @param  array $customClaims
-     * @return string
-     */
-    private function tokenizeRedirect($user, $customClaims)
-    {
-        // This is where we used to setup a session. Now we will setup a token.
-        $token = JWTAuth::fromUser($user, $customClaims);
-
-        // We need to pass the token... how?
-        // Let's try this.
-        return "?token=$token";
-    }
 }

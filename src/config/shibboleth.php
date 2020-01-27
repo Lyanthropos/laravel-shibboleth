@@ -85,17 +85,5 @@ return array(
 
     'add_new_users' => true, // Should new users be added automatically if they do not exist?
 
-    /*
-    |--------------------------------------------------------------------------
-    | JWT Auth
-    |--------------------------------------------------------------------------
-    |
-    | JWTs are for the front end to know it's logged in
-    |
-    | https://github.com/tymondesigns/jwt-auth
-    | https://github.com/StudentAffairsUWM/Laravel-Shibboleth-Service-Provider/issues/24
-    |
-     */
 
-    'jwtauth' => env('JWTAUTH', false),
 );
