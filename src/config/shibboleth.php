@@ -146,7 +146,7 @@ return array(
         // Service Provider Data that we are deploying.
         'sp' => array (
             // Identifier of the SP entity  (must be a URI)
-            'entityId' => en('SHIB_ENTITY_ID', ''),
+            'entityId' => env('SHIB_ENTITY_ID', ''),
             // Specifies info about where and how the <AuthnResponse> message MUST be
             // returned to the requester, in this case our SP.
             'assertionConsumerService' => array (
