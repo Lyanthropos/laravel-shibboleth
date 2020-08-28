@@ -245,4 +245,52 @@ class ShibbolethController extends Controller
         return (View::exists($view)) ? view($view) : Redirect::to($view);
     }
 
+    public function localSPLogin() {
+
+        $auth = new OneLogin_Saml2_Auth(config('shibboleth.local_settings'));
+        $auth->login(null,array(),false,false,false,false);
+    }
+
+    public function localSPACS() {
+        $auth = new OneLogin_Saml2_Auth(config('shibboleth.local_settings'));
+
+        $auth->processResponse();
+
+        $errors = $auth->getErrors();
+
+        if (!empty($errors)) {
+            return array('error' => $errors, 'last_error_reason' => $auth->getLastErrorReason());
+        }
+
+        if (!$auth->isAuthenticated()) {
+            return array('error' => 'Could not authenticate', 'last_error_reason' => $auth->getLastErrorReason());
+        }
+
+        // foreach($auth->getAttributes() as $key=>$value) {
+            Request::session()->flash("shibAttributes",serialize($auth->getAttributes()));
+        // }
+        // Request::session()->flash($auth->getAttributes());
+        return Redirect::action('\\' . __CLASS__ . '@idpAuthenticate');
+
+        
+    }
+    
+    public function localSPMetadata() {
+        $auth = new OneLogin_Saml2_Auth(config('shibboleth.local_settings'));
+        $settings = $auth->getSettings();
+        $metadata = $settings->getSPMetadata();
+        $errors = $settings->validateMetadata($metadata);
+
+        if (empty($errors)) {
+            return response($metadata, 200, ['Content-Type' => 'text/xml']);
+        } else {
+
+            throw new InvalidArgumentException(
+                'Invalid SP metadata: ' . implode(', ', $errors),
+                OneLogin_Saml2_Error::METADATA_SP_INVALID
+            );
+        }
+        
+    }
+
 }
