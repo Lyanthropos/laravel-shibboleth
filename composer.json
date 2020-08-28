@@ -19,10 +19,18 @@
             "email": "jpucket@uark.edu"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/UMN-LATIS/xmlseclibs"
+        }
+    ],
     "require": {
         "illuminate/support": ">=6.0.0 || >=7.0.0",
         "mrclay/shibalike": "1.0.0",
-        "laravel/framework": ">=5.0.0 || >=6.0.0 || >= 7.0.0"
+        "laravel/framework": ">=5.0.0 || >=6.0.0 || >= 7.0.0",
+        "robrichards/xmlseclibs": "dev-master",
+        "onelogin/php-saml": "^3.4"
     },
     "autoload": {
         "psr-4": {
