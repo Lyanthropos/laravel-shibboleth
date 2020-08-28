@@ -9,11 +9,13 @@ class EntitlementTest extends TestCase
 {
     use Setup;
 
+    
     /**
      * @expectedException InvalidArgumentException
      */
     public function testCanInvalidateFindInStringParameter()
     {
+        $this->expectException(InvalidArgumentException::class);
         Entitlement::findInString(1);
     }
 
