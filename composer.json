@@ -19,12 +19,6 @@
             "email": "jpucket@uark.edu"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/UMN-LATIS/xmlseclibs"
-        }
-    ],
     "require": {
         "illuminate/support": ">=6.0.0 || >=7.0.0",
         "mrclay/shibalike": "1.0.0",

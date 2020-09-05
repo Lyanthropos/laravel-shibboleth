@@ -5,6 +5,7 @@ return array(
      Leverages these env settings:
     SHIB_SP_TYPE
     SHIB_EMULATE
+    SHIB_ENTITY_ID
     SHIB_ASSERTION_CONSUMER_URL
     SHIB_LOGOUT_SERVICE_URL
     SHIB_X509_CERT
@@ -291,7 +292,7 @@ return array(
         */
         'signMetadata' => true,
 
-
+        'wantXMLValidation'=>false,
         /** signatures and encryptions required **/
 
         // Indicates a requirement for the <samlp:Response>, <samlp:LogoutRequest> and
