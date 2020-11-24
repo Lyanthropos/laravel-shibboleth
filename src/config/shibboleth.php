@@ -39,6 +39,7 @@ return array(
         'idp_login'     => '/Shibboleth.sso/Login',
         'idp_logout'    => '/Shibboleth.sso/Logout',
     ],
+    "register_routes" => "true",
     'authenticated' => '/home',
     'authfield'     => 'email',
     /*
