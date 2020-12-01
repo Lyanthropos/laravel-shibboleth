@@ -20,10 +20,9 @@
         }
     ],
     "require": {
-        "illuminate/support": ">=6.0.0 || >=7.0.0",
+        "illuminate/support": ">=6.0.0 || >=7.0.0 || >= 8.0.0",
         "mrclay/shibalike": "1.0.0",
-        "robrichards/xmlseclibs": "dev-master",
-        "onelogin/php-saml": "^3.4",
+        "onelogin/php-saml": "3.5.0.x-dev",
         "laravel/framework": "5 - 8"
     },
     "autoload": {
