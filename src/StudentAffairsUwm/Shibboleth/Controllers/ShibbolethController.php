@@ -18,6 +18,7 @@ use StudentAffairsUwm\Shibboleth\ConfigurationBackwardsCompatabilityMapper;
 
 use OneLogin\Saml2\Auth as OneLogin_Saml2_Auth;
 use OneLogin\Saml2\Error as OneLogin_Saml2_Error;
+use OneLogin\Saml2\Utils;
 
 class ShibbolethController extends Controller
 {
@@ -255,7 +256,7 @@ class ShibbolethController extends Controller
 
     public function localSPACS() {
         $auth = new OneLogin_Saml2_Auth(config('shibboleth.local_settings'));
-
+        Utils::setProxyVars(true);
         $auth->processResponse();
 
         $errors = $auth->getErrors();
