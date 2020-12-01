@@ -70,8 +70,7 @@ class ShibbolethController extends Controller
                 . '?target=' .  action('\\' . __CLASS__ . '@idpAuthenticate'));
         }
 
-        return Redirect::to('https://' . Request::server('SERVER_NAME')
-            . ':' . Request::server('SERVER_PORT') . config('shibboleth.' . config('shibboleth.sp_type') . '.idp_login')
+        return Redirect::to(url('/') . config('shibboleth.' . config('shibboleth.sp_type') . '.idp_login')
             . '?target=' . action('\\' . __CLASS__ . '@idpAuthenticate'));
     }
 
@@ -140,7 +139,7 @@ class ShibbolethController extends Controller
             return Redirect::to(action('\\' . __CLASS__ . '@emulateLogout'));
         }
 
-        return Redirect::to('https://' . Request::server('SERVER_NAME') . config('shibboleth.' . config('shibboleth.sp_type') . '.idp_logout'));
+        return Redirect::to(url('/') . config('shibboleth.' . config('shibboleth.sp_type') . '.idp_logout'));
     }
 
     /**
