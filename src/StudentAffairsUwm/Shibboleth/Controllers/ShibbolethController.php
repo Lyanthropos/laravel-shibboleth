@@ -104,7 +104,12 @@ class ShibbolethController extends Controller
         // Add user and send through auth.
         elseif (config('shibboleth.add_new_users', true)) {
             $map['password'] = 'shibboleth';
-            $user = $userClass::create($map);
+            try {
+                $user = $userClass::create($map);
+            }
+            catch (\Illuminate\Database\QueryException $e) {
+                return abort(403, 'Unauthorized');
+            }
             Auth::attempt(array(config('shibboleth.authfield') => $map[config('shibboleth.authfield')]), true);
         }
 
