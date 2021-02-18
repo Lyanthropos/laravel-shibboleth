@@ -259,6 +259,11 @@ class ShibbolethController extends Controller
         $auth->login(null,array(),false,false,false,false);
     }
 
+    public function localSPLogout() {
+        $auth = new OneLogin_Saml2_Auth(config('shibboleth.local_settings'));
+        $auth->logout();
+    }
+
     public function localSPACS() {
         $auth = new OneLogin_Saml2_Auth(config('shibboleth.local_settings'));
         Utils::setProxyVars(true);
