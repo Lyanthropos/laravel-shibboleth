@@ -40,7 +40,37 @@ your `config/auth.php` file.
 ],
 ```
 
-Now users may login via Shibboleth by going to `https://example.com/shibboleth-login`
+
+
+## Configuration ##
+
+The published `shibboleth.php` config file allows for a wide range of customization. If you're leveraging the local-sp functionality, you'll need to provide a variety of information about your Shibboleth IdP. If you're leveraging the Apache shibboleth SP, you should only need to verify the Shibboleth attributes that you'll be using. 
+
+For local development, add `SHIB_EMULATE=true` to your .env file. This will enable you to login with any of the users defined in the `emulate_idp_users` array of shibboleth.php. You may add additional users if you wish.
+
+UMN users: the shibboleth.php local-sp config is mostly ready for the UMN IdP. You'll need to provide your private key and cert in the .env file. See the example below.
+
+```env
+SHIB_SP_TYPE=local_shib
+SHIB_EMULATE=false
+SHIB_ENTITY_ID=your-shibboleth-entity
+SHIB_ASSERTION_CONSUMER_URL=https://your-hostname/local-sp/ACS
+SHIB_LOGOUT_SERVICE_URL=https://your-hostname/local-sp/Logout
+SHIB_X509_CERT="Certificate here, no line returns"
+SHIB_PRIVATE_KEY="Private Key Here, no Line Returns"
+SHIB_IDP_ENTITY=https://idp2.shib.umn.edu/idp/shibboleth
+SHIB_IDP_SSO=https://login.umn.edu/idp/profile/SAML2/Redirect/SSO
+SHIB_IDP_SLO=https://login.umn.edu/idp/profile/SAML2/Redirect/SLO
+SHIB_IDP_X509_SIGNING="MIIDHzCCAgegAwIBAgIUah2ROh5+3z9VKbgAKYi4SezMYjwwDQYJKoZIhvcNAQEL\nBQAwGDEWMBQGA1UEAwwNbG9naW4udW1uLmVkdTAeFw0xNjA2MjkxNzQ4MTRaFw0z\nNjA2MjkxNzQ4MTRaMBgxFjAUBgNVBAMMDWxvZ2luLnVtbi5lZHUwggEiMA0GCSqG\nSIb3DQEBAQUAA4IBDwAwggEK$
+SHIB_IDP_X509_ENCRYPTION="MIIDHzCCAgegAwIBAgIUSM2i3FZUSYOcPx+9WwQrsSRtYC8wDQYJKoZIhvcNAQEL\nBQAwGDEWMBQGA1UEAwwNbG9naW4udW1uLmVkdTAeFw0xNjA2MjkxNzQ5MzhaFw0z\nNjA2MjkxNzQ5MzhaMBgxFjAUBgNVBAMMDWxvZ2luLnVtbi5lZHUwggEiMA0GCSqG\nSIb3DQEBAQUAA4IBDwAwg$
+```
+
+Also, if you use the built in local-sp module for metadata generation by accessing hostname/local-sp/Metadata, **be sure to remove md:NameIDFormat from the metadata** before submitting it to OIT.
+
+
+## Usage ##
+
+If everything is right with the world, users may now login via Shibboleth by going to `https://example.com/shibboleth-login`
 and logout using `https://example.com/shibboleth-logout` so you can provide a custom link
 or redirect based on email address in the login form.
 

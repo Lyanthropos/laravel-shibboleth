@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Illuminate\Console\AppNamespaceDetectorTrait;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use StudentAffairsUwm\Shibboleth\Entitlement;
 use StudentAffairsUwm\Shibboleth\ConfigurationBackwardsCompatabilityMapper;
 
 use OneLogin\Saml2\Auth as OneLogin_Saml2_Auth;
@@ -121,12 +120,6 @@ class ShibbolethController extends Controller
         }
 
         Session::regenerate();
-
-        // $entitlementString = $this->getServerVariable(config('shibboleth.entitlement'));
-        // if (!empty($entitlementString)) {
-        //     $entitlements = Entitlement::findInString($entitlementString);
-        //     $user->entitlements()->sync($entitlements);
-        // }
 
         $route = config('shibboleth.authenticated');
 

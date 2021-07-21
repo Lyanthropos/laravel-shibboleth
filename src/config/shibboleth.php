@@ -30,6 +30,7 @@ return array(
     |
      */
 
+     // default to using apache mod_shib
     'sp_type' => env('SHIB_SP_TYPE', 'apache_shib'),
     'local_shib' => [
         'idp_login'     => '/local-sp/Login',
@@ -39,9 +40,12 @@ return array(
         'idp_login'     => '/Shibboleth.sso/Login',
         'idp_logout'    => '/Shibboleth.sso/Logout',
     ],
-    "register_routes" => "true",
+    // by default, we'll register the necessary routes. In multitennancy cases, you probably don't want to do this.
+    "register_routes" => true,
+    // where should the user be redirected after a successful login
     'authenticated' => '/home',
-    'authfield'     => 'email',
+    // authfield defines the field we should use as the primary key to look up users in our database.
+    'authfield'     => 'umndid',
     /*
     |--------------------------------------------------------------------------
     | Emulate an IdP
@@ -63,6 +67,8 @@ return array(
             'givenName'   => 'Admin',
             'sn'          => 'User',
             'mail'        => 'admin@uwm.edu',
+            'umndid'        => 'fkEWzvkzzksed',
+            'emplid'        => '1111111',
         ),
         'staff' => array(
             'uid'         => 'staff',
@@ -70,6 +76,8 @@ return array(
             'givenName'   => 'Staff',
             'sn'          => 'User',
             'mail'        => 'staff@uwm.edu',
+            'umndid'        => 'dktEfcdzzksed',
+            'emplid'        => '2222222',
         ),
         'user'  => array(
             'uid'         => 'user',
@@ -77,6 +85,8 @@ return array(
             'givenName'   => 'User',
             'sn'          => 'User',
             'mail'        => 'user@uwm.edu',
+            'umndid'        => 'vDSAeszf',
+            'emplid'        => '3333333',
         ),
     ),
 
@@ -89,17 +99,15 @@ return array(
     |
      */
 
-    'entitlement' => 'entitlement',
-
-    // Note: when using local-sp, these need to be the full unmapped attributes from Shib
-    
+    // Note: when using local-sp, these need to be the full unmapped attributes from Shib    
     'user' => [
         // fillable user model attribute => server variable
-        'email'       => 'mail',
+        'email'       => 'eppn',
         'name'        => 'displayName',
         'first_name'  => 'givenName',
         'last_name'   => 'sn',
-        'student_id'  => 'employeeNumber',
+        'umndid'  => 'umnDID',
+        'emplid'  => 'umnEmplId',
     ],
 
     /*
