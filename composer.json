@@ -20,8 +20,9 @@
         }
     ],
     "require": {
-        "illuminate/support": ">=6.0.0 || >=7.0.0",
+        "illuminate/support": ">=6.0.0 || >=7.0.0 || >= 8.0.0",
         "mrclay/shibalike": "1.0.0",
+        "onelogin/php-saml": "~3.5.1",
         "laravel/framework": "5 - 8"
     },
     "autoload": {

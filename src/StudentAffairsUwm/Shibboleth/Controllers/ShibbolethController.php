@@ -16,6 +16,10 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use StudentAffairsUwm\Shibboleth\Entitlement;
 use StudentAffairsUwm\Shibboleth\ConfigurationBackwardsCompatabilityMapper;
 
+use OneLogin\Saml2\Auth as OneLogin_Saml2_Auth;
+use OneLogin\Saml2\Error as OneLogin_Saml2_Error;
+use OneLogin\Saml2\Utils;
+
 class ShibbolethController extends Controller
 {
     /**
@@ -67,8 +71,7 @@ class ShibbolethController extends Controller
                 . '?target=' .  action('\\' . __CLASS__ . '@idpAuthenticate'));
         }
 
-        return Redirect::to('https://' . Request::server('SERVER_NAME')
-            . ':' . Request::server('SERVER_PORT') . config('shibboleth.idp_login')
+        return Redirect::to(url('/') . config('shibboleth.' . config('shibboleth.sp_type') . '.idp_login')
             . '?target=' . action('\\' . __CLASS__ . '@idpAuthenticate'));
     }
 
@@ -142,7 +145,7 @@ class ShibbolethController extends Controller
             return Redirect::to(action('\\' . __CLASS__ . '@emulateLogout'));
         }
 
-        return Redirect::to('https://' . Request::server('SERVER_NAME') . config('shibboleth.idp_logout'));
+        return Redirect::to(url('/') . config('shibboleth.' . config('shibboleth.sp_type') . '.idp_logout'));
     }
 
     /**
@@ -226,6 +229,13 @@ class ShibbolethController extends Controller
             return isset($_SERVER[$variableName]) ?
                 $_SERVER[$variableName] : null;
         }
+        if (config('shibboleth.sp_type') == "local_shib") {
+            if(Request::session("shibAttributes")) {
+                $deserialized = unserialize(Request::session()->get("shibAttributes"));
+                return isset($deserialized[$variableName]) ?
+                (is_array($deserialized[$variableName])?$deserialized[$variableName][0]:$deserialized[$variableName]) : null;
+            }
+        }
 
         $variable = Request::server($variableName);
 
@@ -241,6 +251,59 @@ class ShibbolethController extends Controller
     private function viewOrRedirect($view)
     {
         return (View::exists($view)) ? view($view) : Redirect::to($view);
+    }
+
+    public function localSPLogin() {
+
+        $auth = new OneLogin_Saml2_Auth(config('shibboleth.local_settings'));
+        $auth->login(null,array(),false,false,false,false);
+    }
+
+    public function localSPLogout() {
+        $auth = new OneLogin_Saml2_Auth(config('shibboleth.local_settings'));
+        $auth->logout();
+    }
+
+    public function localSPACS() {
+        $auth = new OneLogin_Saml2_Auth(config('shibboleth.local_settings'));
+        Utils::setProxyVars(true);
+        $auth->processResponse();
+
+        $errors = $auth->getErrors();
+
+        if (!empty($errors)) {
+            return array('error' => $errors, 'last_error_reason' => $auth->getLastErrorReason());
+        }
+
+        if (!$auth->isAuthenticated()) {
+            return array('error' => 'Could not authenticate', 'last_error_reason' => $auth->getLastErrorReason());
+        }
+
+        // foreach($auth->getAttributes() as $key=>$value) {
+            Request::session()->flash("shibAttributes",serialize($auth->getAttributes()));
+        // }
+        // Request::session()->flash($auth->getAttributes());
+        return Redirect::action('\\' . __CLASS__ . '@idpAuthenticate');
+
+        
+    }
+    
+    public function localSPMetadata() {
+        $auth = new OneLogin_Saml2_Auth(config('shibboleth.local_settings'));
+        $settings = $auth->getSettings();
+        $metadata = $settings->getSPMetadata();
+        $errors = $settings->validateMetadata($metadata);
+
+        if (empty($errors)) {
+            return response($metadata, 200, ['Content-Type' => 'text/xml']);
+        } else {
+
+            throw new InvalidArgumentException(
+                'Invalid SP metadata: ' . implode(', ', $errors),
+                OneLogin_Saml2_Error::METADATA_SP_INVALID
+            );
+        }
+        
     }
 
 }
