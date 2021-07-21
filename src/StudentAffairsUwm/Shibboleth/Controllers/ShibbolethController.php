@@ -71,7 +71,7 @@ class ShibbolethController extends Controller
                 . '?target=' .  action('\\' . __CLASS__ . '@idpAuthenticate'));
         }
 
-        return Redirect::to(url('/') . config('shibboleth.' . config('shibboleth.sp_type') . '.idp_login')
+        return Redirect::to(url('/') . $this->getLoginURL()
             . '?target=' . action('\\' . __CLASS__ . '@idpAuthenticate'));
     }
 
@@ -145,7 +145,7 @@ class ShibbolethController extends Controller
             return Redirect::to(action('\\' . __CLASS__ . '@emulateLogout'));
         }
 
-        return Redirect::to(url('/') . config('shibboleth.' . config('shibboleth.sp_type') . '.idp_logout'));
+        return Redirect::to(url('/') . $this->getLogoutURL());
     }
 
     /**
@@ -242,6 +242,25 @@ class ShibbolethController extends Controller
         return (!empty($variable)) ?
             $variable :
             Request::server('REDIRECT_' . $variableName);
+    }
+
+    // These are helpers to provide backwards compatibility with the apache only version of this library
+    private function getLoginURL() {
+        if(config('shibboleth.sp_type')) {
+            return config('shibboleth.' . config('shibboleth.sp_type') . '.idp_login');
+        }
+        else {
+            return config('shibboleth.idp_login');
+        }
+    }
+
+    private function getLogoutURL() {
+        if(config('shibboleth.sp_type')) {
+            return config('shibboleth.' . config('shibboleth.sp_type') . '.idp_logout');
+        }
+        else {
+            return config('shibboleth.idp_logout');
+        }
     }
 
     /*
