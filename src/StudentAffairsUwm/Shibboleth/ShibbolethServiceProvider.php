@@ -15,6 +15,9 @@ class ShibbolethServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->publishes([
+            __DIR__ . '/../../config/shibboleth.php' => config_path('shibboleth.php'),
+        ]);
         $this->loadRoutesFrom(__DIR__ . '/../../routes/shibboleth.php');
     }
 
@@ -30,5 +33,15 @@ class ShibbolethServiceProvider extends ServiceProvider
         $this->app['auth']->provider('shibboleth', function ($app) {
             return new Providers\ShibbolethUserProvider($app['config']['auth.providers.users.model']);
         });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return string[]
+     */
+    public function provides()
+    {
+        return [];
     }
 }
