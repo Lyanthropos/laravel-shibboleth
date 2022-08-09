@@ -225,7 +225,16 @@ class ShibbolethController extends Controller
         if (config('shibboleth.sp_type') == "local_shib") {
             if(Request::session("shibAttributes")) {
                 $deserialized = unserialize(Request::session()->get("shibAttributes"));
-                return $deserialized[$variableName]?:null;
+                if(isset($deserialized[$variableName])) {
+                    if(is_array($deserialized[$variableName])) {
+                        if(count($deserialized[$variableName])>1) {
+                            return $deserialized[$variableName];
+                        }
+                        return $deserialized[$variableName][0];
+                    }
+                    return $deserialized[$variableName];
+                }
+                return null;
             }
         }
 
