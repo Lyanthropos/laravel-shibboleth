@@ -67,6 +67,15 @@ SHIB_IDP_X509_ENCRYPTION="MIIDHzCCAgegAwIBAgIUSM2i3FZUSYOcPx+9WwQrsSRtYC8wDQYJKo
 
 Also, if you use the built in local-sp module for metadata generation by accessing hostname/local-sp/Metadata, **be sure to remove md:NameIDFormat from the metadata** before submitting it to OIT.
 
+### CSRF expiration
+
+If you're using the local SP option, you'll need to modify `app/Http/Middleware/VerifyCsrfToken.php` within your Laravel project, adding an exception for the assertion consumer. 
+
+```
+protected $except = [
+    '/local-sp/ACS'
+];
+```
 
 ## Usage ##
 
