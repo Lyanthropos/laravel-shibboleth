@@ -185,7 +185,7 @@ class ShibbolethController extends Controller
             $data['error'] = 'Incorrect username and/or password';
         }
 
-        return view('vendor.shibalike.IdpLogin', $data);
+        return $this->viewOrRedirect(config('shibboleth.emulate_idp_login_view'));
     }
 
     /**
